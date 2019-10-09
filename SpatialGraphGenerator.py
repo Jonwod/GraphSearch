@@ -56,3 +56,23 @@ def generate_grid_graph(grid_dimensions=(1200, 800), spacing=40, origin=(0, 0), 
         node_list.extend(column)
 
     return node_list
+
+
+
+def generate_spatial_tree(min_branch, max_branch, depth, origin=(0, 0), horizontal_spacing = 30, vertical_spacing = 100):
+    base_width = horizontal_spacing * max_branch ** depth
+    def expand_node(node, node_list, branches, current_depth):
+        for i in range(0, branches):
+
+            new_node = SpatialNode(origin)
+            node_list.append(new_node)
+            node.successors.append(new_node)
+            if d > 1:
+                expand_node(new_node, node_list, random.randint(min_branch, max_branch), d - 1)
+
+
+    node_list = [SpatialNode(origin)]
+    expand_node(node_list[0], node_list, random.randint(min_branch, max_branch), 1)
+
+
+
