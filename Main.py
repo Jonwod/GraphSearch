@@ -5,7 +5,7 @@ from SpatialGraphGenerator import generate_grid_graph
 from Graph import Graph
 
 
-graph = Graph(generate_grid_graph(grid_dimensions=(1000, 700), origin=(50, 50), spacing=100))
+graph = Graph(generate_grid_graph(grid_dimensions=(1000, 700), origin=(50, 50), spacing=100, min_connections=3, max_connections = 6))
 
 start = graph.nodes[random.randint(0, len(graph.nodes) - 1)]
 goal = graph.nodes[random.randint(0, len(graph.nodes) - 1)]
