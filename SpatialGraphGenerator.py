@@ -22,8 +22,7 @@ from SpatialNode import SpatialNode
 #     return nodes
 
 
-def generate_grid_graph(grid_dimensions=(1200, 800), spacing=40, origin=(0, 0), min_connections=1, max_connections=4):
-    """ Returns a list of nodes arranged in a grid pattern"""
+def generate_disconnected_node_grid(grid_dimensions=(1200, 800), spacing=40, origin=(0, 0)):
     columns = int(grid_dimensions[0]) // spacing
     rows = int(grid_dimensions[1]) // spacing
     grid = []
@@ -33,6 +32,12 @@ def generate_grid_graph(grid_dimensions=(1200, 800), spacing=40, origin=(0, 0), 
         for y in range(0, rows):
             pos = (origin[0] + x*spacing, origin[1] + y*spacing)
             grid[x].append(SpatialNode(pos))
+    return grid
+
+
+def random_connect_node_grid(grid, min_connections, max_connections):
+    columns = len(grid)
+    rows = len(grid[0])
 
     # Connect the nodes
     for x in range(0, columns):
@@ -51,28 +56,41 @@ def generate_grid_graph(grid_dimensions=(1200, 800), spacing=40, origin=(0, 0), 
                     break
     # ~Connect the nodes
 
+
+def two_way_connect(node1, node2):
+    node1.successors.append(node2)
+    node2.successors.append(node1)
+
+
+def add_grid_filling_path(grid):
+    columns = len(grid)
+    rows = len(grid[0])
+
+    for x in range(0, columns):
+        if x < columns - 1:
+            if x % 2 == 0:
+                two_way_connect(grid[x][0], grid[x+1][0])
+            else:
+                two_way_connect(grid[x][-1], grid[x+1][-1])
+
+        for y in range(0, rows):
+            if y < (rows - 1):
+                two_way_connect(grid[x][y], grid[x][y+1])
+
+
+
+def generate_grid_graph(grid_dimensions=(1200, 800), spacing=40, origin=(0, 0), min_connections=1, max_connections=4, connected=True):
+    """ Returns a list of nodes arranged in a grid pattern"""
+    grid = generate_disconnected_node_grid(grid_dimensions, spacing, origin)
+
+    if connected:
+        add_grid_filling_path(grid)
+        random_connect_node_grid(grid, min_connections - 1, max_connections - 1)
+    else:
+        random_connect_node_grid(grid, min_connections, max_connections)
+
     node_list = []
     for column in grid:
         node_list.extend(column)
 
     return node_list
-
-
-
-def generate_spatial_tree(min_branch, max_branch, depth, origin=(0, 0), horizontal_spacing = 30, vertical_spacing = 100):
-    base_width = horizontal_spacing * max_branch ** depth
-    def expand_node(node, node_list, branches, current_depth):
-        for i in range(0, branches):
-
-            new_node = SpatialNode(origin)
-            node_list.append(new_node)
-            node.successors.append(new_node)
-            if d > 1:
-                expand_node(new_node, node_list, random.randint(min_branch, max_branch), d - 1)
-
-
-    node_list = [SpatialNode(origin)]
-    expand_node(node_list[0], node_list, random.randint(min_branch, max_branch), 1)
-
-
-

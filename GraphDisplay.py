@@ -28,7 +28,7 @@ class GraphDisplay:
                 arrow_end = VecMath.sub(path[i].position, VecMath.multiply(a_to_b, self.radius))
                 self.path_lines.append(
                     self.canvas.create_line(arrow_start[0], arrow_start[1], arrow_end[0], arrow_end[1], arrow=tk.LAST,
-                                            dash=(2, 2), fill='blue'))
+                                            dash=(2, 2), fill='yellow', width=10))
             self.canvas.update()
 
         self.canvas['bg'] = 'green'
