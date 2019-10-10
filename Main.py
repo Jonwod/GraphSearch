@@ -12,11 +12,11 @@ goal = graph.nodes[random.randint(0, len(graph.nodes) - 1)]
 
 print("start: " + str(start.id) + "   goal: " + str(goal.id))
 
-path = Search.depth_first(start, goal)
+path = Search.iterative_deepening_search(start, goal)
+
+if path is None:
+    print("No path found between " + str(start.id) + " and " + str(goal.id))
 
 display = GraphDisplay(graph, path=path)
 
-if path is None:
-    print("No path between " + str(start.id) + " and " + str(goal.id))
-else:
-    display.highlight_path(path)
+

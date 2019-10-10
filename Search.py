@@ -47,7 +47,32 @@ def breadth_first(start, goal):
 
 
 
+def select_last(frontier):
+        return frontier.pop(-1)
+
+
 def depth_first(start, goal):
-        def select_last(frontier):
-                return frontier.pop(-1)
         return generic_search(start, goal, select_last)
+
+
+def depth_limited_search(start, goal, depth_limit=50):
+        frontier = [[start]]
+        iterations = 0
+        while len(frontier) > 0:
+                path = select_last(frontier)
+                if path[-1] == goal:
+                    return path
+                elif len(path) <= depth_limit:  # This is the bit that differs from depth_first_search
+                    for succ in path[-1].successors:
+                        frontier.append(path + [succ])
+                iterations += 1
+
+
+def iterative_deepening_search(start, goal):
+        depth = 0
+        while True:
+                path = depth_limited_search(start, goal, depth)
+                if path is not None:
+                        return path
+                else:
+                        depth += 1
