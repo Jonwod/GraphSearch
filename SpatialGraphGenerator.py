@@ -1,26 +1,6 @@
 import random
 from SpatialNode import SpatialNode
 
-# def generate_spatial_tree(min_branching_factor, max_branching_factor, max_depth):
-#     current_depth = 0
-#     base_node = SpatialNode((0, 0))
-#     nodes = [base_node]
-#     frontier = [base_node]
-#     spacing = 40
-#
-#     while current_depth < max_depth:
-#         next_frontier = []
-#         for node in frontier:
-#             branches = random.randint(min_branching_factor, max_branching_factor)
-#             for i in range(0, branches):
-#                 new_node = Node()
-#                 node.successors.append(new_node)
-#                 next_frontier.append(new_node)
-#                 nodes.append(new_node)
-#         current_depth += 1
-#         frontier = next_frontier
-#     return nodes
-
 
 def generate_disconnected_node_grid(grid_dimensions=(1200, 800), spacing=40, origin=(0, 0)):
     columns = int(grid_dimensions[0]) // spacing
@@ -49,7 +29,7 @@ def random_connect_node_grid(grid, min_connections, max_connections):
                     rand_dir = directions[random.randint(0, len(directions) - 1)]
                     contarget = (x + rand_dir[0], y + rand_dir[1])
                     if 0 <= contarget[0] < columns and 0 <= contarget[1] < rows:
-                        grid[x][y].successors.append(grid[contarget[0]][contarget[1]])
+                        grid[x][y].add_successor(grid[contarget[0]][contarget[1]])
                         num -= 1
                     directions.remove(rand_dir)
                 else:
@@ -58,8 +38,8 @@ def random_connect_node_grid(grid, min_connections, max_connections):
 
 
 def two_way_connect(node1, node2):
-    node1.successors.append(node2)
-    node2.successors.append(node1)
+    node1.add_successor(node2)
+    node2.add_successor(node1)
 
 
 def add_grid_filling_path(grid):
