@@ -25,7 +25,7 @@ def frontier_string(frontier):
     return string
 
 
-def generic_search(start, goal, path_select_func, log=False):
+def generic_search(start, goal, path_select_func, log=True):
     """ path_select_func should be a function that selects a path from frontier to expand, removes it from the
         frontier and returns it """
     frontier = [[start]]
@@ -82,15 +82,16 @@ def iterative_deepening_search(start, goal):
             depth += 1
 
 
-def select_lowest_cost(frontier):
-    def cost_func(path):
-        """ This cost function just returns the linear distance between the nodes (assumed to be spatial
-                nodes)"""
-        cost = 0
-        for i in range(1, len(path)):
-            cost += VecMath.length(VecMath.sub(path[i - 1].position, path[i].position))
-        return cost
+def cost_func(path):
+    """ This cost function just returns the linear distance between the nodes (assumed to be spatial
+            nodes)"""
+    cost = 0
+    for i in range(1, len(path)):
+        cost += VecMath.length(VecMath.sub(path[i - 1].position, path[i].position))
+    return cost
 
+
+def select_lowest_cost(frontier):
     lowest_cost_path = None
     lowest_path_cost = float('inf')
     for i in range(0, len(frontier)):
@@ -113,10 +114,26 @@ def linear_distance_heuristic(path, goal):
 
 
 def select_lowest_heuristic(frontier, goal, heuristic_func = linear_distance_heuristic):
-    return min(frontier, key=lambda path: heuristic_func(path, goal))
+    lowest_heuristic_path = None
+    lowest_path_heuristic = float('inf')
+    for i in range(0, len(frontier)):
+        path = frontier[i]
+        heuristic_cost = heuristic_func(path, goal)
+        if heuristic_cost <= lowest_path_heuristic:
+            lowest_path_heuristic = heuristic_cost
+            lowest_heuristic_path = i
+
+    return None if lowest_heuristic_path is None else frontier.pop(lowest_heuristic_path)
 
 
 def greedy_search(start, goal):
     # Note that the frontier selection function is a function not just of the frontier but of the goal as well
     return generic_search(start, goal, lambda frontier: select_lowest_heuristic(frontier, goal=goal))
 
+
+def a_star_heuristic(path, goal):
+    return cost_func(path) + linear_distance_heuristic(path, goal)
+
+
+def a_start_search(start, goal):
+    return generic_search(start, goal, lambda frontier: select_lowest_heuristic(frontier, goal=goal, heuristic_func=a_star_heuristic))
