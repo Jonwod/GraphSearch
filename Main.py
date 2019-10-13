@@ -12,7 +12,7 @@ goal = graph.nodes[random.randint(0, len(graph.nodes) - 1)]
 
 print("start: " + str(start.id) + "   goal: " + str(goal.id))
 
-path = Search.iterative_deepening_search(start, goal)
+path = Search.greedy_search(start, goal)
 
 if path is None:
     print("No path found between " + str(start.id) + " and " + str(goal.id))

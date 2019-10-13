@@ -104,3 +104,19 @@ def select_lowest_cost(frontier):
 
 def uniform_cost_search(start, goal):
     return generic_search(start, goal, select_lowest_cost)
+
+
+# Informed searches
+
+def linear_distance_heuristic(path, goal):
+    return VecMath.length(VecMath.sub(goal.position, path[-1].position))
+
+
+def select_lowest_heuristic(frontier, goal, heuristic_func = linear_distance_heuristic):
+    return min(frontier, key=lambda path: heuristic_func(path, goal))
+
+
+def greedy_search(start, goal):
+    # Note that the frontier selection function is a function not just of the frontier but of the goal as well
+    return generic_search(start, goal, lambda frontier: select_lowest_heuristic(frontier, goal=goal))
+
